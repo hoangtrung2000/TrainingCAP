@@ -1,10 +1,115 @@
 ﻿@model IEnumerable<ProjectEMR.Models.Doctor>
+@using System.Data;
 
 @{
     ViewBag.Title = "Index";
 }
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+</script>
+
+<script>
+    function bs_input_file() {
+        $(".input-file").before(
+            function () {
+                if (!$(this).prev().hasClass('input-ghost')) {
+                    var element = $("<input type='file' id='dataFile' name='uploads' multiple class='input-ghost' style='visibility:hidden; height:0'>");
+                    element.attr("name", $(this).attr("name"));
+                    element.change(function () {
+                        element.next(element).find('input').val((element.val()).split('\\').pop());
+                    });
+                    $(this).find("button.btn-choose").click(function () {
+                        element.click();
+                    });
+                    $(this).find("button.btn-reset").click(function () {
+                        element.val(null);
+                        $(this).parents(".input-file").find('input').val('');
+                    });
+                    $(this).find('input').css("cursor", "pointer");
+                    $(this).find('input').mousedown(function () {
+                        $(this).parents('.input-file').prev().click();
+                        return false;
+                    });
+                    return element;
+                }
+            }
+        );
+    }
+
+    function clear() {
+        var input = $("#dataFile").val('');
+    };
+    $(function () {
+        clear();
+        bs_input_file();
+    });
+</script>
+
+
 <h2>Index</h2>
+
+@using (Html.BeginForm("ImportExcel", "Doctors", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="info2">
+        <h2>Browse File for uploading</h2>
+        @Html.AntiForgeryToken()
+
+        <div class="form-group" name="Fichier1">
+            <!-- COMPONENT START -->
+            <div class="form-group">
+                <div class="input-group input-file">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default btn-choose" type="button">Choose</button>
+                    </span>
+                    <input type="text" class="form-control" placeholder='Choose a file...' />
+
+                </div>
+            </div>
+            @*<input type="file" id="dataFile" name="upload" />*@
+
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Upload" class="btn btn-default" />
+        </div>
+
+
+        <div class="alert alert-danger">
+            @Html.ValidationSummary()
+            @*<strong></strong> asdasd*@
+        </div>
+
+
+
+    </div>
+    if (ViewBag.DT != null)
+    {
+        <table id="table1" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    @foreach (DataColumn col in ViewBag.DT.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow row in ViewBag.DT.Rows)
+                {
+                    <tr>
+                        @foreach (DataColumn col in ViewBag.DT.Columns)
+                        {
+                            <td>@row[col.ColumnName]</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -23,23 +128,30 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Department)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    }
 
 </table>
+
+<script>
+    $(document).ready(function () {
+        $("table1").DataTable();
+    });
+</script>
