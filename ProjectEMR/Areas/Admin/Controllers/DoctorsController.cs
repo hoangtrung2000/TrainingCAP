@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,17 +21,17 @@ namespace ProjectEMR.Areas.Admin.Controllers
         // GET: Admin/Doctors
         public ActionResult Index()
         {
-            DataTable dt = new DataTable();
+            //DataTable dt = new DataTable();
 
-            try
-            {
-                dt = (DataTable)Session["tmpdata"];
-            }
-            catch (Exception ex)
-            {
+            //try
+            //{
+            //    dt = (DataTable)Session["tmpdata"];
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
-            ViewBag.DT = Session["tmpdata"];
+            //}
+            //ViewBag.DT = Session["tmpdata"];
             return View(db.Doctors.ToList());
         }
 
@@ -103,12 +105,32 @@ namespace ProjectEMR.Areas.Admin.Controllers
                     }
                 }
             }
-         
+            dt = dt.Rows.Cast<DataRow>()
+            .Where(row => !row.ItemArray.All(field => field is DBNull || string.IsNullOrWhiteSpace(field as string)))
+            .CopyToDataTable();
             result.Tables.Add(dt);
             reader.Close();
             reader.Dispose();
             DataTable tmp = result.Tables[0];
             Session["tmpdata"] = tmp;  //store datatable into session
+            string conString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+                {
+                    //Set the database table name.
+                    sqlBulkCopy.DestinationTableName = "dbo.Doctor";
+
+                    //[OPTIONAL]: Map the Excel columns with that of the database table
+                    sqlBulkCopy.ColumnMappings.Add("Name", "Name");
+                    sqlBulkCopy.ColumnMappings.Add("Department", "Department");
+                    sqlBulkCopy.ColumnMappings.Add("Description", "Description");
+
+                    con.Open();
+                    sqlBulkCopy.WriteToServer(dt);
+                    con.Close();
+                }
+            }
             return RedirectToAction("Index");
         }
 
