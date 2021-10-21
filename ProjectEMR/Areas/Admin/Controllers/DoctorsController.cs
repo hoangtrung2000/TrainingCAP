@@ -9,7 +9,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using ExcelDataReader;
+using OfficeOpenXml;
 using ProjectEMR.Models;
 
 namespace ProjectEMR.Areas.Admin.Controllers
@@ -132,6 +134,40 @@ namespace ProjectEMR.Areas.Admin.Controllers
                 }
             }
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Export()
+        {
+            //var doctors = db.Doctors.ToList();
+            var doctors = (from doc in db.Doctors
+                           select new
+                           {
+                               id = doc.ID,
+                               name = doc.Name,
+                               department = doc.Department,
+                               desc = doc.Description,
+                           });
+
+            using (ExcelPackage pck = new ExcelPackage())
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet 1");
+                ws.Cells[1, 1].LoadFromCollection(doctors, true);
+                // Load your collection "accounts"
+
+                Byte[] fileBytes = pck.GetAsByteArray();
+                Response.Clear();
+                Response.Buffer = true;
+                Response.AddHeader("content-disposition", "attachment;filename=DataTable.xlsx");
+                // Replace filename with your custom Excel-sheet name.
+
+                Response.Charset = "";
+                Response.ContentType = "application/vnd.ms-excel";
+                StringWriter sw = new StringWriter();
+                Response.BinaryWrite(fileBytes);
+                Response.End();
+            }
+
+            return RedirectToAction("Index"); ;
         }
 
         // GET: Admin/Doctors/Details/5
