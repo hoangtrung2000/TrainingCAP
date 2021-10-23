@@ -48,95 +48,144 @@
     });
 </script>
 
+<div id="main">
+    <h2>Index</h2>
 
-<h2>Index</h2>
-
-@using (Html.BeginForm("ImportExcel", "Doctors", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <div class="info2">
-        <h2>Browse File for uploading</h2>
-        @Html.AntiForgeryToken()
-
-        <div class="form-group" name="Fichier1">
-            <!-- COMPONENT START -->
-            <div class="form-group">
-                <div class="input-group input-file">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default btn-choose" type="button">Choose</button>
-                    </span>
-                    <input type="text" class="form-control" placeholder='Choose a file...' />
-
-                </div>
-            </div>
-            @*<input type="file" id="dataFile" name="upload" />*@
-
-        </div>
-
-        <div class="form-group">
-            <input type="submit" value="Upload" class="btn btn-default" />
-        </div>
-
-
-        <div class="alert alert-danger">
-            @Html.ValidationSummary()
-            @*<strong></strong> asdasd*@
-        </div>
-
-
-
-    </div>
-}
-
-@using (Html.BeginForm("Export", "Doctors"))
-{
-    <table>
-        <tr>
-            <td>Export Data : </td>
-            <td>
-                <input type="submit" name="Export" value="Export to Excel" />
-            </td>
-        </tr>
-    </table>
-}
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Department)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+    @using (Html.BeginForm("ImportExcel", "Doctors", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-            </td>
-        </tr>
+        <div class="info2">
+            <h2>Browse File for uploading</h2>
+            @Html.AntiForgeryToken()
+
+            <div class="form-group" name="Fichier1">
+                <!-- COMPONENT START -->
+                <div class="form-group">
+                    <div class="input-group input-file">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default btn-choose" type="button">Choose</button>
+                        </span>
+                        <input type="text" class="form-control" placeholder='Choose a file...' />
+
+                    </div>
+                </div>
+                @*<input type="file" id="dataFile" name="upload" />*@
+
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Upload" class="btn btn-default" />
+            </div>
+
+
+            <div class="alert alert-danger">
+                @Html.ValidationSummary()
+                @*<strong></strong> asdasd*@
+            </div>
+
+
+
+        </div>
     }
 
-</table>
+
+    <header class="mb-3">
+        <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+        </a>
+    </header>
+
+    <div class="page-heading">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-12 col-md-6 order-md-1 order-last">
+                    <h3>DataTable</h3>
+                    <p class="text-subtitle text-muted">For user to check they list</p>
+                </div>
+                <div class="col-12 col-md-6 order-md-2 order-first">
+                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">DataTable</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <section class="section">
+            <div class="card">
+                <div class="card-custom">
+                    <div class="pdr-10 space-custom">
+                        @Html.ActionLink("Create New", "Create")
+                    </div>
+                    <div class="pdr-10 space-custom">
+                        @Html.ActionLink("Create New", "Create")
+                    </div>
+                    <div class="pdr-10">
+                        @using (Html.BeginForm("Export", "Doctors"))
+                        {
+                            <table>
+                                <tr>
+                                    <td>Export Data : </td>
+                                    <td>
+                                        <input type="submit" name="Export" value="Export to Excel" />
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="table1">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Department)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer clearfix mb-0 text-muted">
+            <div class="float-start">
+                <p>2021 &copy; Mazer</p>
+            </div>
+            <div class="float-end">
+                <p>
+                    Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+</div>
+
 
 <script>
     $(document).ready(function () {

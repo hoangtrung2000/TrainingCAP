@@ -1,0 +1,15 @@
+.space-custom{
+    padding-top : 5px;
+  /*  margin-right: 10px;*/
+}
+
+.card-custom{
+    display: flex;
+    margin:0;
+   /* padding: 1.5rem;*/
+    align-content: center;
+}
+
+.card-custom div:nth-child(1n + 1){
+    padding-left: 10px;
+}
