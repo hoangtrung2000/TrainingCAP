@@ -1,0 +1,58 @@
+﻿
+body {
+    height: 3000px;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box
+}
+header {
+    height: 5em;
+    background-color: #2db0b0;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+a:hover{
+    text-decoration: none;
+    transition: color .5s ;
+}
+
+ul li{
+   list-style: none;
+}
+nav{
+    height:100%;
+}
+nav .nav-list{
+    display:flex;
+    align-items: center;
+    font-size: 2rem;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+nav li{
+    padding-left: 5rem;
+}
+
+.sticky{
+    position: fixed;
+    width:100%;
+    z-index: 1;
+    animation: fadeIn .5s linear;
+}
+
+@keyframes fadeIn {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+}

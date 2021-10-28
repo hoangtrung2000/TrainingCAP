@@ -6,10 +6,11 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link href="@Url.Content("~/css/styles.css")" rel="stylesheet" />
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    @*<div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -28,7 +29,17 @@
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
-    </div>
+    </div>*@
+    <header id="header">
+        <nav>
+            <ul class="nav-list">
+                <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                <li><a href="@Url.Action("About", "Home")">About</a></li>
+                <li><a href="@Url.Action("Contact", "Home")">Contact</a></li>
+            </ul>    
+        </nav>
+    </header>
+
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -36,6 +47,14 @@
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>
+
+
+    <script type="text/javascript">
+        var header = document.getElementById("header");
+        window.addEventListener("scroll", e => {
+            header.classList.toggle('sticky', window.scrollY > 300);  
+        })
+    </script>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
