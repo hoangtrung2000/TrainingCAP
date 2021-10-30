@@ -106,12 +106,14 @@
                         <button type="button" class="btn btn-outline-primary">
                             @Html.ActionLink("Create New", "Create")
                         </button>
+                       
                     </div>                           
                 </div>
                 <div class="card-body">
                     <table class="table table-striped" id="table1">
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Name</th>
                                 <th>Department</th>
                                 <th>Description</th>
@@ -122,6 +124,9 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td>
+                                        <img src="@item.Image" alt="Avatar" />
+                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
